@@ -1,7 +1,7 @@
 import mongoose  from "mongoose";
 const Dbconnection=async()=>{
     try {
-        const url = "mongodb://jabed:password123@localhost:27017/Pay-Per-View?authSource=admin";
+        const url =process.env.DB_URL
         await mongoose.connect(url)
         console.log("success fully connected")
 
