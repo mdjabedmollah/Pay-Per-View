@@ -1,11 +1,13 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import Dbconnection from './utils/db.js'
 
 dotenv.config()
 const app = express()
 const port = process.env.PORT || 8081
-
+//Data base 
+Dbconnection()
 //middleware 
 app.use(
   cors({
