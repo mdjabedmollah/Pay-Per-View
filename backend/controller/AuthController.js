@@ -44,47 +44,42 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "All field are required",
-      });
+      return res.status(400).json({ message: "All fields are required" });
     }
-    const user = await User.findOne({
-      email,
-    });
+
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "User already exist",
-      });
+      return res.status(400).json({ message: "User not found" });
     }
-    const payload = {
-      id: user._id,
-      email: user.email,
-      role:user.role,
-  
-    };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "24h",
-    });
+
     const isMatch = await compare(password, user.password);
-    if (!isMatch)
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
-
-    return res.cookie("token",token,{
-      httpOnly:true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, 
-      sameSite: "strict",
     }
 
-    ).json({ message: "Login successful!",user: req.user });
-  } catch (error) {
-    console.log("Login error ", error);
-    return res.status(500).json({
-      success: false,
-      message: "server site error ",
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
     });
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user,
+      token
+    });
+  } catch (error) {
+    console.log("Login error", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
