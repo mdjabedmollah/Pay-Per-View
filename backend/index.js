@@ -4,6 +4,7 @@ import cors from 'cors'
 import Dbconnection from './utils/db.js'
 import AuthRoute from './routes/AuthRoute.js'
 import serviceRoute from './routes/serviceRoutes.js'
+import orderRoute from './routes/orderRoute.js'
 dotenv.config()
 const app = express()
 const port = process.env.PORT || 8081
@@ -21,7 +22,8 @@ app.use(express.json())
 //Api
 
 app.use('/api/v1', AuthRoute)
-app.use('/api/v1',serviceRoute)
+app.use('/api/v1/service',serviceRoute)
+app.use('/api/v1/order',orderRoute)
 
 
 app.get('/', (req, res) => {
