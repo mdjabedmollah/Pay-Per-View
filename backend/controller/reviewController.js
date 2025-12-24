@@ -20,17 +20,19 @@ export const createReview = async (req, res) => {
       });
     }
 
+    //  only buyer
     if (order.buyerId.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,
-        message: "Unauthorized",
+        message: "Only buyer can review",
       });
     }
 
+    //  completed order only
     if (order.status !== "Completed") {
       return res.status(400).json({
         success: false,
-        message: "Order is not completed yet",
+        message: "Order not completed",
       });
     }
 
@@ -42,7 +44,7 @@ export const createReview = async (req, res) => {
       comment,
     });
 
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       message: "Review submitted successfully",
       review,
@@ -56,9 +58,35 @@ export const createReview = async (req, res) => {
     }
 
     console.log("Review error", error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "Server error",
     });
   }
 };
+export const getServiceReviews = async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+
+    const reviews = await Review.find({ serviceId })
+      .populate("reviewerId", "email")
+      .sort({ createdAt: -1 });
+
+    const avgRating =
+      reviews.reduce((sum, r) => sum + r.rating, 0) /
+      (reviews.length || 1);
+
+    res.json({
+      success: true,
+      reviews,
+      avgRating: Number(avgRating.toFixed(1)),
+    });
+  } catch (error) {
+    console.log("Get review error", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+

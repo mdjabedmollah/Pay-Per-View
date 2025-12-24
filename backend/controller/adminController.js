@@ -19,27 +19,40 @@ export const stats = async (req, res) => {
   }
 };
 
+
 export const topSellers = async (req, res) => {
   try {
     const data = await Review.aggregate([
-      { 
-        $group: { 
-          _id: "$sellerId", 
-          rating: { $avg: "$rating" } 
-        } 
+      {
+        $group: {
+          _id: "$sellerId",
+          avgRating: { $avg: "$rating" },
+          totalReviews: { $sum: 1 },
+        },
       },
-      { $sort: { rating: -1 } },
-      { $limit: 5 }
+      { $sort: { avgRating: -1 } },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "seller",
+        },
+      },
+      { $unwind: "$seller" },
+      {
+        $project: {
+          sellerId: "$_id",
+          email: "$seller.email",
+          avgRating: { $round: ["$avgRating", 1] },
+          totalReviews: 1,
+        },
+      },
     ]);
 
-    res.json({
-      success: true,
-      data
-    });
+    res.json({ success: true, data });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

@@ -112,3 +112,26 @@ export const CompleteOrder = async (req, res) => {
     });
   }
 };
+export const getBuyerOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ buyerId: req.user.id })
+      .populate("serviceId", "title")
+      .sort({ createdAt: -1 });
+
+    res.json({ success: true, orders });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const getSellerOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ sellerId: req.user.id })
+      .populate("serviceId", "title")
+      .sort({ createdAt: -1 });
+
+    res.json({ success: true, orders });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
