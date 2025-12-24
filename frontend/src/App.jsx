@@ -7,6 +7,9 @@ import Services from "./pages/Services";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
+import SellerOrders from "./pages/seller";
+import CreateService from "./pages/CreateService";
+import BuyerOrders from "./pages/BuyerOrder";
 
 function App() {
   return (
@@ -20,6 +23,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/seller/orders" element={<SellerOrders />} />
+          <Route path="/service/create" element={<CreateService />} />
+          <Route path="/buyer/orders" element={<BuyerOrders />} />
+
         </Routes>
       </main>
 

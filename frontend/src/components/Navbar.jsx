@@ -19,14 +19,27 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 bg-white shadow-sm z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        
+        {/* Logo */}
         <Link to="/" className="text-2xl font-bold">
           Pay<span className="text-gray-500">View</span>
         </Link>
 
+        {/* Right Menu */}
         <div className="flex items-center gap-6">
           <Link to="/services" className="hover:text-gray-500">
             Services
           </Link>
+
+          {/* Seller → Post Service */}
+          {user?.role === "seller" && (
+            <Link
+              to="/service/create"
+              className="hover:text-gray-500 font-medium"
+            >
+              Post Service
+            </Link>
+          )}
 
           {!user ? (
             <>
@@ -41,8 +54,14 @@ export default function Navbar() {
                 {user.email}
               </span>
 
+              {/* Admin link */}
               {user.role === "admin" && (
-                <Link to="/admin">Admin</Link>
+                <Link
+                  to="/admin"
+                  className="hover:text-gray-500 font-medium"
+                >
+                  Admin
+                </Link>
               )}
 
               <button

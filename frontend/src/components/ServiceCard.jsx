@@ -1,6 +1,6 @@
 import { useState } from "react";
-import api from "../api/axios";
-import { useAuth } from "../context/AuthContext";
+import api from "../../api/axios"
+import { useAuth } from "../../context/AuthContext";
 
 export default function ServiceCard({ service }) {
   const { user } = useAuth();
@@ -13,10 +13,10 @@ export default function ServiceCard({ service }) {
       const res = await api.post("/order", {
         serviceId: service._id,
       });
-      setMsg("✅ Order created successfully");
+      setMsg(" Order created successfully");
     } catch (err) {
       setMsg(
-        err.response?.data?.message || "❌ Order failed"
+        err.response?.data?.message || " Order failed"
       );
     } finally {
       setLoading(false);
