@@ -11,19 +11,20 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const submit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const res = await api.post("/login", { email, password });
-      setUser(res.data.user);
-      navigate("/");
-    } catch (err) {
-      setError("Invalid email or password");
-    } finally {
-      setLoading(false);
-    }
-  };
+const submit = async (e) => {
+  e.preventDefault();
+  try {
+    setLoading(true);
+    const res = await api.post("/login", { email, password });
+    setUser(res.data.user);
+    navigate("/services");
+  } catch {
+    setError("Invalid email or password");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen grid place-items-center bg-gray-50 px-4">

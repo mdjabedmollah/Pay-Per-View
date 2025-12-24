@@ -1,9 +1,23 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import api from "../api/axios";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api
+      .get("/login") // optional (see note)
+      .then((res) => {
+        setUser(res.data.user);
+      })
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return null;
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
@@ -12,10 +26,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
