@@ -1,3 +1,9 @@
+```env
+PORT=8080
+DB_URL=mongodb://username:password@localhost:27017/database?authSource=admin
+JWT_SECRET=your_jwt_secret
+NODE_ENV=development
+
 <img width="2548" height="1229" alt="Image" src="https://github.com/user-attachments/assets/fed8c077-5378-4312-8e08-100a5a3dd5c7" />
 
 <img width="2548" height="1229" alt="Image" src="https://github.com/user-attachments/assets/e0f005e9-6b1e-484d-a86d-95abe064812f" />
