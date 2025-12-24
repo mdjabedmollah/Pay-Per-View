@@ -1,21 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 import Home from "./pages/Home";
+import Services from "./pages/Services";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Services from "./pages/Services";
 import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
     <BrowserRouter>
-      {/* Top Navigation */}
       <Navbar />
 
-      {/* Main Content */}
       <main className="min-h-screen bg-gray-50">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -26,7 +23,6 @@ function App() {
         </Routes>
       </main>
 
-      {/* Footer */}
       <Footer />
     </BrowserRouter>
   );
