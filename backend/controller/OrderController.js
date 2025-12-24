@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import Order from "../models/OrderModels.js";
 import Service from "../models/ServiceModels.js";
 
-/* ================= CREATE ORDER (BUYER) ================= */
 export const CreateOrder = async (req, res) => {
   try {
     const { serviceId } = req.body;
@@ -62,10 +61,9 @@ export const CreateOrder = async (req, res) => {
   }
 };
 
-/* ================= COMPLETE ORDER (SELLER) ================= */
 export const CompleteOrder = async (req, res) => {
   try {
-    const orderId = req.params.id.trim(); // 🔥 IMPORTANT FIX
+    const orderId = req.params.id.trim(); //  IMPORTANT FIX
 
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
       return res.status(400).json({

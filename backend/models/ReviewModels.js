@@ -34,7 +34,12 @@ const reviewSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-// eviewSchema.index({ serviceId: 1, reviewerId: 1 }, { unique: true });
+
+//  One review per service per buyer
+reviewSchema.index(
+  { serviceId: 1, reviewerId: 1 },
+  { unique: true }
+);
 
 const Review = mongoose.model("Review", reviewSchema);
 export default Review;
