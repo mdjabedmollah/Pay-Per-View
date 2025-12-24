@@ -10,4 +10,3 @@
 
 <img width="2548" height="1229" alt="Image" src="https://github.com/user-attachments/assets/16c31750-ca1b-4214-bf90-d131591eb826" />
 
-<img width="2548" height="1229" alt="Image" src="https://github.com/user-attachments/assets/a68b43df-0117-49cd-9a50-26f38e9e4334" />
