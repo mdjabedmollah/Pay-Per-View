@@ -1,7 +1,4 @@
-import { useState } from "react";
-import api from "../../api/axios";
-
-export default function ReviewForm({ orderId }) {
+export default function ReviewForm({ orderId, onSuccess }) {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,6 +9,7 @@ export default function ReviewForm({ orderId }) {
       setLoading(true);
       await api.post("/review", { orderId, rating, comment });
       setMsg("Review submitted successfully");
+      onSuccess(); // 🔥 update parent state
     } catch (err) {
       setMsg(err.response?.data?.message || "Review failed");
     } finally {

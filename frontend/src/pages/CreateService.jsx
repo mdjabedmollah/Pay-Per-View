@@ -17,7 +17,7 @@ export default function CreateService() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // 🔒 only seller allowed
+  //  only seller allowed
   if (!user || user.role !== "seller") {
     return (
       <div className="p-10 text-center text-red-500">
@@ -36,11 +36,11 @@ export default function CreateService() {
         price: Number(form.price),
       });
 
-      setMessage("✅ Service created successfully");
+      setMessage("Service created successfully");
       navigate("/services");
     } catch (err) {
       setMessage(
-        err.response?.data?.message || "❌ Service creation failed"
+        err.response?.data?.message || "Service creation failed"
       );
     } finally {
       setLoading(false);

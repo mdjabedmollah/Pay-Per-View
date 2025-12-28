@@ -21,6 +21,12 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: ["Active", "Completed"],
       default: "Active",
+      status: "Active"
+
+    },
+    reviewed: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

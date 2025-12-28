@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Order from "../models/OrderModels.js";
 import Service from "../models/ServiceModels.js";
 
+// ✅ CREATE ORDER
 export const CreateOrder = async (req, res) => {
   try {
     const { serviceId } = req.body;
@@ -28,6 +29,14 @@ export const CreateOrder = async (req, res) => {
       });
     }
 
+    // ❗ buyer cannot order own service
+    if (service.sellerId.toString() === req.user.id) {
+      return res.status(400).json({
+        success: false,
+        message: "You cannot order your own service",
+      });
+    }
+
     const alreadyOrdered = await Order.findOne({
       serviceId,
       buyerId: req.user.id,
@@ -47,71 +56,58 @@ export const CreateOrder = async (req, res) => {
       status: "Active",
     });
 
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       message: "Order created successfully",
       order,
     });
+
   } catch (error) {
-    console.log("order create error", error);
-    return res.status(500).json({
+    console.error("Order error:", error);
+    res.status(500).json({
       success: false,
       message: "Server error",
     });
   }
 };
 
+// ✅ COMPLETE ORDER
 export const CompleteOrder = async (req, res) => {
   try {
-    const orderId = req.params.id.trim(); //  IMPORTANT FIX
+    const orderId = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid order ID",
-      });
+      return res.status(400).json({ message: "Invalid order ID" });
     }
 
     const order = await Order.findById(orderId);
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
+      return res.status(404).json({ message: "Order not found" });
     }
 
-    // only seller can complete
     if (order.sellerId.toString() !== req.user.id) {
-      return res.status(403).json({
-        success: false,
-        message: "Unauthorized action",
-      });
+      return res.status(403).json({ message: "Unauthorized" });
     }
 
     if (order.status === "Completed") {
-      return res.status(400).json({
-        success: false,
-        message: "Order already completed",
-      });
+      return res.status(400).json({ message: "Already completed" });
     }
 
     order.status = "Completed";
     await order.save();
 
-    return res.status(200).json({
+    res.json({
       success: true,
-      message: "Order completed successfully",
+      message: "Order completed",
       order,
     });
-  } catch (error) {
-    console.log("Complete Order error", error);
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
 };
+
+// ✅ GET BUYER ORDERS
 export const getBuyerOrders = async (req, res) => {
   try {
     const orders = await Order.find({ buyerId: req.user.id })
@@ -119,11 +115,12 @@ export const getBuyerOrders = async (req, res) => {
       .sort({ createdAt: -1 });
 
     res.json({ success: true, orders });
-  } catch (err) {
-    res.status(500).json({ success: false, message: "Server error" });
+  } catch {
+    res.status(500).json({ success: false });
   }
 };
 
+// ✅ GET SELLER ORDERS
 export const getSellerOrders = async (req, res) => {
   try {
     const orders = await Order.find({ sellerId: req.user.id })
@@ -131,7 +128,7 @@ export const getSellerOrders = async (req, res) => {
       .sort({ createdAt: -1 });
 
     res.json({ success: true, orders });
-  } catch (err) {
-    res.status(500).json({ success: false, message: "Server error" });
+  } catch {
+    res.status(500).json({ success: false });
   }
 };

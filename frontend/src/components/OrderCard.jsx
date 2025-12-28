@@ -15,20 +15,26 @@ export default function OrderCard({ order, onComplete }) {
       setLoading(false);
     }
   };
+console.log("Order:", order);
+console.log("Order status:", order.status);
+
 
   return (
     <div className="card">
       <p><b>Service:</b> {order.serviceId.title}</p>
       <p><b>Status:</b> {order.status}</p>
 
-      {order.status === "Active" && (
-        <button
-          onClick={completeOrder}
-          className="btn btn-primary mt-4"
-        >
-          {loading ? "Completing..." : "Complete Order"}
-        </button>
-      )}
+      {String(order.status).toLowerCase() === "active"  && (
+  <button
+    onClick={completeOrder}
+    className="btn btn-primary mt-4"
+  >
+    {loading ? "Completing..." : "Complete Order"}
+  </button>
+  
+
+)}
+
     </div>
   );
 }

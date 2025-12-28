@@ -1,6 +1,81 @@
 import Review from "../models/ReviewModels.js";
 import Order from "../models/OrderModels.js";
 
+// export const createReview = async (req, res) => {
+//   try {
+//     const { orderId, rating, comment } = req.body;
+
+//     if (!orderId || !rating) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "orderId and rating are required",
+//       });
+//     }
+
+//     const order = await Order.findById(orderId);
+//     if (!order) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Order not found",
+//       });
+//     }
+// const exists = await Review.findOne({
+//   serviceId: order.serviceId,
+//   reviewerId: req.user.id
+// });
+
+// if (exists) {
+//   return res.status(400).json({
+//     success: false,
+//     message: "You already reviewed this service",
+//   });
+// }
+//     //  only buyer
+//     if (order.buyerId.toString() !== req.user.id) {
+//       return res.status(403).json({
+//         success: false,
+//         message: "Only buyer can review",
+//       });
+//     }
+
+//     //  completed order only
+//     if (order.status !== "Completed") {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Order not completed",
+//       });
+//     }
+
+//     const review = await Review.create({
+//       serviceId: order.serviceId,
+//       sellerId: order.sellerId,
+//       reviewerId: req.user.id,
+//       rating,
+//       comment,
+//     });
+// order.reviewed = true;
+// await order.save();
+
+//     res.status(201).json({
+//       success: true,
+//       message: "Review submitted successfully",
+//       review,
+//     });
+//   } catch (error) {
+//     if (error.code === 11000) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "You already reviewed this service",
+//       });
+//     }
+
+//     console.log("Review error", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Server error",
+//     });
+//   }
+// };
 export const createReview = async (req, res) => {
   try {
     const { orderId, rating, comment } = req.body;
@@ -13,26 +88,27 @@ export const createReview = async (req, res) => {
     }
 
     const order = await Order.findById(orderId);
+
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
+      return res.status(404).json({ message: "Order not found" });
     }
 
-    //  only buyer
     if (order.buyerId.toString() !== req.user.id) {
-      return res.status(403).json({
-        success: false,
-        message: "Only buyer can review",
-      });
+      return res.status(403).json({ message: "Only buyer can review" });
     }
 
-    //  completed order only
     if (order.status !== "Completed") {
+      return res.status(400).json({ message: "Order not completed" });
+    }
+
+    const exists = await Review.findOne({
+      serviceId: order.serviceId,
+      reviewerId: req.user.id,
+    });
+
+    if (exists) {
       return res.status(400).json({
-        success: false,
-        message: "Order not completed",
+        message: "You already reviewed this service",
       });
     }
 
@@ -44,26 +120,22 @@ export const createReview = async (req, res) => {
       comment,
     });
 
+    // ✅ important
+    order.reviewed = true;
+    await order.save();
+
     res.status(201).json({
       success: true,
       message: "Review submitted successfully",
       review,
     });
-  } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: "You already reviewed this service",
-      });
-    }
 
-    console.log("Review error", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
+
 export const getServiceReviews = async (req, res) => {
   try {
     const { serviceId } = req.params;

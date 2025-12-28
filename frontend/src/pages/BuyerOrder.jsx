@@ -20,9 +20,25 @@ export default function BuyerOrders() {
           <div key={order._id} className="card">
             <p><b>Status:</b> {order.status}</p>
 
-            {order.status === "Completed" && (
-              <ReviewForm orderId={order._id} />
-            )}
+            {order.status === "Completed" && !order.reviewed && (
+  <ReviewForm
+    orderId={order._id}
+    onSuccess={() => {
+      setOrders((prev) =>
+        prev.map((o) =>
+          o._id === order._id ? { ...o, reviewed: true } : o
+        )
+      );
+    }}
+  />
+)}
+
+{order.reviewed && (
+  <p className="text-green-600 font-medium mt-2">
+     Review submitted
+  </p>
+)}
+
           </div>
         ))}
       </div>
