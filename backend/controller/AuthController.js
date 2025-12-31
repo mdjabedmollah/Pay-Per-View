@@ -112,7 +112,7 @@ export const login = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    // ✅ REMOVE password before sending
+    //  REMOVE password before sending
     const { password: _, ...safeUser } = user._doc;
 
     res.cookie("token", token, {

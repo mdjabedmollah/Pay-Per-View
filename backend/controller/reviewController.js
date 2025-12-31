@@ -88,7 +88,7 @@ export const createReview = async (req, res) => {
     }
 
     const order = await Order.findById(orderId);
-
+     console.log("order id ", orderId)
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
@@ -100,7 +100,7 @@ export const createReview = async (req, res) => {
     if (order.status !== "Completed") {
       return res.status(400).json({ message: "Order not completed" });
     }
-
+  //  console.log("serviceId and reviewerId", order.serviceId  , req.user.id)
     const exists = await Review.findOne({
       serviceId: order.serviceId,
       reviewerId: req.user.id,
@@ -120,10 +120,10 @@ export const createReview = async (req, res) => {
       comment,
     });
 
-    // ✅ important
+    //  important
     order.reviewed = true;
     await order.save();
-
+     console.log("order review",review)
     res.status(201).json({
       success: true,
       message: "Review submitted successfully",
@@ -142,12 +142,15 @@ export const getServiceReviews = async (req, res) => {
 
     const reviews = await Review.find({ serviceId })
       .populate("reviewerId", "email")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 });  
 
-    const avgRating =
-      reviews.reduce((sum, r) => sum + r.rating, 0) /
-      (reviews.length || 1);
-
+    // const avgRating =
+    //   reviews.reduce((sum, r) => sum + r.rating, 0) /
+    //   (reviews.length || 1);
+    
+const avgRating = reviews.length === 0 ? 0 : reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+// console.log("avg rating",avgRating)
+// console.log("reviews ", reviews)
     res.json({
       success: true,
       reviews,

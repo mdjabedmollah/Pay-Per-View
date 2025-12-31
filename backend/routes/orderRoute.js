@@ -10,9 +10,9 @@ import {
 
 const router = express.Router();
 
-router.post("/", protect, isBuyer, CreateOrder);
-router.get("/buyer", protect, isBuyer, getBuyerOrders);
-router.get("/seller", protect, isSeller, getSellerOrders);
-router.put("/:id", protect, isSeller, CompleteOrder);
+router.post("/", protect, isBuyer, CreateOrder); // order create 
+router.get("/buyer", protect, isBuyer, getBuyerOrders); // get all byer order 
 
+router.put("/:id", protect, isSeller, CompleteOrder); // order comple korbe seller
+router.get("/seller", protect, isSeller, getSellerOrders);
 export default router;

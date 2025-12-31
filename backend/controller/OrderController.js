@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Order from "../models/OrderModels.js";
 import Service from "../models/ServiceModels.js";
 
-// ✅ CREATE ORDER
+//  CREATE ORDER
 export const CreateOrder = async (req, res) => {
   try {
     const { serviceId } = req.body;
@@ -29,7 +29,7 @@ export const CreateOrder = async (req, res) => {
       });
     }
 
-    // ❗ buyer cannot order own service
+    //  buyer cannot order own service
     if (service.sellerId.toString() === req.user.id) {
       return res.status(400).json({
         success: false,
@@ -71,7 +71,7 @@ export const CreateOrder = async (req, res) => {
   }
 };
 
-// ✅ COMPLETE ORDER
+//  COMPLETE ORDER
 export const CompleteOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
@@ -107,7 +107,7 @@ export const CompleteOrder = async (req, res) => {
   }
 };
 
-// ✅ GET BUYER ORDERS
+// GET BUYER ORDERS
 export const getBuyerOrders = async (req, res) => {
   try {
     const orders = await Order.find({ buyerId: req.user.id })
@@ -120,7 +120,7 @@ export const getBuyerOrders = async (req, res) => {
   }
 };
 
-// ✅ GET SELLER ORDERS
+//  GET SELLER ORDERS
 export const getSellerOrders = async (req, res) => {
   try {
     const orders = await Order.find({ sellerId: req.user.id })

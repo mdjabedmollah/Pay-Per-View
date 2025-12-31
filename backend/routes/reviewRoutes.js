@@ -6,6 +6,6 @@ import { createReview, getServiceReviews } from "../controller/reviewController.
 const router = express.Router();
 
 router.post("/", protect, isBuyer, createReview);
-router.get("/:serviceId", getServiceReviews);
+router.get("/:serviceId", getServiceReviews);  // service  id dite hobe 
 
 export default router;

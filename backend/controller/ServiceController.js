@@ -6,8 +6,8 @@ export const service = async (req, res) => {
       ...req.body,
       sellerId: req.user.id,
     });
-    console.log("Service sellerId:", service.sellerId);
-    console.log("Buyer ID:", req.user.id);
+    // console.log("Service sellerId:", service.sellerId);
+    // console.log("Buyer ID:", req.user.id);
     if (!service) {
       return res.status(400).json({
         success: false,
